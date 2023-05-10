@@ -11,7 +11,7 @@ then
 fi
 
 
-cp dbus-bsc-can-main /data/bus-bsc-can
+cp -f -r dbus-bsc-can-main /data/dbus-bsc-can
 
 # set permissions for script files
 chmod a+x /data/dbus-bsc-can/service/run
@@ -32,10 +32,10 @@ fi
 
 
 #copy new qml files
-cp /data/dbus-json-bms/qml/PageBattery.qml /opt/victronenergy/gui/qml/
-cp /data/dbus-json-bms/qml/PageBatteryBsc.qml /opt/victronenergy/gui/qml/
-cp /data/dbus-json-bms/qml/PageBatteryBscBms.qml /opt/victronenergy/gui/qml/
-cp /data/dbus-json-bms/qml/PageBatteryBscTemp.qml /opt/victronenergy/gui/qml/
+cp -f /data/dbus-bsc-can/qml/PageBattery.qml /opt/victronenergy/gui/qml/
+cp -f /data/dbus-bsc-can/qml/PageBatteryBsc.qml /opt/victronenergy/gui/qml/
+cp -f /data/dbus-bsc-can/qml/PageBatteryBscBms.qml /opt/victronenergy/gui/qml/
+cp -f /data/dbus-bsc-can/qml/PageBatteryBscTemp.qml /opt/victronenergy/gui/qml/
 
 
 #delete download data
