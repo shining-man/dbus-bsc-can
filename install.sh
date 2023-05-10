@@ -10,6 +10,8 @@ then
     opkg install python3-pip
 fi
 
+# install python-can
+pip3 install python-can
 
 cp -f -r dbus-bsc-can-main /data/dbus-bsc-can
 
