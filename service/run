@@ -1,0 +1,3 @@
+#!/bin/sh
+exec 2>&1
+exec python3 /data/dbus-bsc-can/dbus-bsc-can.py
