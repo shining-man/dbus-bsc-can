@@ -1,8 +1,11 @@
 #!/bin/sh
 
+echo "Install..."
+
 # install pip
 if [ ! -f /usr/bin/pip3 ] 
 then
+	echo "Install pip3..."
     #curl https://bootstrap.pypa.io/pip/2.7/get-pip.py -o get-pip.py
 	#python get-pip.py
 	
@@ -32,6 +35,7 @@ then
     echo >> $filename
 fi
 
+grep -qxF "/data/dbus-bsc-can-main/install.sh" $filename || echo "/data/dbus-bsc-can-main/install.sh" >> $filename
 
 #copy new qml files
 cp -f /data/dbus-bsc-can/qml/PageBattery.qml /opt/victronenergy/gui/qml/
@@ -42,7 +46,7 @@ cp -f /data/dbus-bsc-can/qml/PageBatteryBscTemp.qml /opt/victronenergy/gui/qml/
 
 #delete download data
 rm main.zip
-rm -r dbus-bsc-can-main
+#rm -r dbus-bsc-can-main
 
 
 #stop gui

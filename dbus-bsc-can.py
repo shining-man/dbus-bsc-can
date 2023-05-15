@@ -51,7 +51,7 @@ def parseData(message):
         if canId>=candIdStart and canId<candIdStart+4:
             cellNr=(canId-0x400-(0x32*bmsNr))*4
             for i in range(4):
-                bsc_cellVoltage[bmsNr][cellNr+i] = ((message.data[(i*2)+1]<<8) | message.data[i*2])/100.0
+                bsc_cellVoltage[bmsNr][cellNr+i] = ((message.data[(i*2)+1]<<8) | message.data[i*2])/1000.0
                 
         #Ohter data
         candIdStart=candIdStart+4
