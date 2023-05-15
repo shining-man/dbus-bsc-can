@@ -46,7 +46,7 @@ cp -f /data/dbus-bsc-can/qml/PageBatteryBscTemp.qml /opt/victronenergy/gui/qml/
 
 #delete download data
 rm main.zip
-#rm -r dbus-bsc-can-main
+rm -r dbus-bsc-can-main
 
 
 #stop gui
