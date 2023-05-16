@@ -35,7 +35,7 @@ then
     echo >> $filename
 fi
 
-grep -qxF "/data/dbus-bsc-can-main/install.sh" $filename || echo "/data/dbus-bsc-can-main/install.sh" >> $filename
+grep -qxF "/data/dbus-bsc-can/install.sh" $filename || echo "/data/dbus-bsc-can/install.sh" >> $filename
 
 #copy new qml files
 cp -f /data/dbus-bsc-can/qml/PageBattery.qml /opt/victronenergy/gui/qml/
