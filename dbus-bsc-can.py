@@ -6,6 +6,7 @@ import argparse
 import logging
 import sys
 import os
+import dbus
 from array import *
 import time
 import configparser
@@ -68,29 +69,41 @@ def parseData(message):
     return
             
             
-        
+def get_bus():
+    return (
+        dbus.SessionBus()
+        if "DBUS_SESSION_BUS_ADDRESS" in os.environ
+        else dbus.SystemBus()
+    )
+
+    
 class DbusBscService(object):
     def __init__(self, servicename, deviceinstance, productname='BSC Details', connection='BSC service'):
-        self._dbusservice = VeDbusService(servicename)
+        #self._dbusservice = VeDbusService(servicename)
 
+        self._dbusservice = VeDbusService(
+            servicename,
+            get_bus()
+        )
+        
         logging.debug("%s /DeviceInstance = %d" % (servicename, deviceinstance))
 
         # Create the management objects, as specified in the ccgx dbus-api document
         self._dbusservice.add_path('/Mgmt/ProcessName', __file__)
-        self._dbusservice.add_path('/Mgmt/ProcessVersion', 'Unkown version, and running on Python ' + platform.python_version())
+        self._dbusservice.add_path('/Mgmt/ProcessVersion', 'Python ' + platform.python_version())
         self._dbusservice.add_path('/Mgmt/Connection', connection)
 
         # Create the mandatory objects
         self._dbusservice.add_path('/DeviceInstance', deviceinstance)
-        self._dbusservice.add_path('/ProductId', 0)
+        self._dbusservice.add_path('/ProductId', 16)
         self._dbusservice.add_path('/ProductName', productname)
-        self._dbusservice.add_path('/FirmwareVersion', 0)
-        self._dbusservice.add_path('/HardwareVersion', 0)
+        self._dbusservice.add_path('/FirmwareVersion', 1)
+        self._dbusservice.add_path('/HardwareVersion', 1)
         self._dbusservice.add_path('/Connected', 1)
     
         #Temperatures
         for i in range(64):
-            temppath = '/bsc/temp' + str(i+1)
+            temppath = '/bsc/Temp' + str(i+1)
             self._dbusservice.add_path(temppath, None, writeable=True, gettextcallback=lambda p, v: "{:1.2f}°C".format(v))
             
         #BMS
@@ -99,17 +112,17 @@ class DbusBscService(object):
                 cellpath = '/bsc/bms' + str(n) + '/Voltages/Cell' + str(i+1)
                 self._dbusservice.add_path(cellpath, None, writeable=True, gettextcallback=lambda p, v: "{:1.3f}V".format(v))
                 
-            cellpath = '/bsc/bms' + str(n) + '/stateFETCharge'
+            cellpath = '/bsc/bms' + str(n) + '/StateFETCharge'
             self._dbusservice.add_path(cellpath, None, writeable=True)
                 
-            cellpath = '/bsc/bms' + str(n) + '/stateFETDischarge'
+            cellpath = '/bsc/bms' + str(n) + '/StateFETDischarge'
             self._dbusservice.add_path(cellpath, None, writeable=True)
                 
-            cellpath = '/bsc/bms' + str(n) + '/stateBalancingActive'
+            cellpath = '/bsc/bms' + str(n) + '/StateBalancingActive'
             self._dbusservice.add_path(cellpath, None, writeable=True)
                 
-            cellpath = '/bsc/bms' + str(n) + '/balancingCurrent'
-            self._dbusservice.add_path(cellpath, None, writeable=True, gettextcallback=lambda p, v: "{:1.3f}A".format(v))
+            cellpath = '/bsc/bms' + str(n) + '/BalancingCurrent'
+            self._dbusservice.add_path(cellpath, None, writeable=True, gettextcallback=lambda p, v: "{:1.1f}A".format(v))
                 
         GLib.timeout_add(1000, self._update)
 
@@ -122,21 +135,21 @@ class DbusBscService(object):
                     temppath = '/bsc/bms' + str(i) + '/Voltages/Cell' + str(n+1)
                     self._dbusservice[temppath] = bsc_cellVoltage[i][n]
         
-                temppath = '/bsc/bms' + str(i) + '/stateFETCharge'
-                self._dbusservice[temppath] = "Off" if stateFETCharge[i] == 1 else "On"
+                temppath = '/bsc/bms' + str(i) + '/StateFETCharge'
+                self._dbusservice[temppath] = "Off" if stateFETCharge[i] == 0 else "On"
                 
-                temppath = '/bsc/bms' + str(i) + '/stateFETDischarge'
-                self._dbusservice[temppath] = "Off" if stateFETDischarge[i] == 1 else "On"
+                temppath = '/bsc/bms' + str(i) + '/StateFETDischarge'
+                self._dbusservice[temppath] = "Off" if stateFETDischarge[i] == 0 else "On"
                 
-                temppath = '/bsc/bms' + str(i) + '/stateBalancingActive'
-                self._dbusservice[temppath] = "Off" if stateBalancingActive[i] == 1 else "On"
+                temppath = '/bsc/bms' + str(i) + '/StateBalancingActive'
+                self._dbusservice[temppath] = "Off" if stateBalancingActive[i] == 0 else "On"
                 
-                temppath = '/bsc/bms' + str(i) + '/balancingCurrent'
+                temppath = '/bsc/bms' + str(i) + '/BalancingCurrent'
                 self._dbusservice[temppath] = balancingCurrent[i]
   
             #Temp
             for i in range(64):
-                temppath = '/bsc/temp' + str(i+1)
+                temppath = '/bsc/Temp' + str(i+1)
                 self._dbusservice[temppath] = bsc_temp[i]
           
             self._lastUpdate = time.time() 
@@ -173,8 +186,8 @@ def main():
     DBusGMainLoop(set_as_default=True)
       
     bsc_output = DbusBscService(
-        servicename='com.victronenergy.battery',
-        deviceinstance=0)
+        servicename='com.victronenergy.battery.bsc',
+        deviceinstance=1)
 
     logging.info('Connected to dbus, and switching over to GLib.MainLoop() (= event based)')
     mainloop = GLib.MainLoop()

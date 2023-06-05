@@ -1,0 +1,4 @@
+*.qml   text eol=lf
+*.sh   text eol=lf
+*.py   text eol=lf
+*.ini   text eol=lf

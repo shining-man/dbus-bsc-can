@@ -3,22 +3,25 @@ import com.victron.velib 1.0
 
 MbPage {
 	id: root
-	property string c1: _b1.valid && _b1.text == "1" ? "#ff0000" : "#ddd"
-	property string c2: _b2.valid && _b2.text == "1" ? "#ff0000" : "#ddd"
-	property string c3: _b3.valid && _b3.text == "1" ? "#ff0000" : "#ddd"
-	property string c4: _b4.valid && _b4.text == "1" ? "#ff0000" : "#ddd"
-	property string c5: _b5.valid && _b5.text == "1" ? "#ff0000" : "#ddd"
-	property string c6: _b6.valid && _b6.text == "1" ? "#ff0000" : "#ddd"
-	property string c7: _b7.valid && _b7.text == "1" ? "#ff0000" : "#ddd"
-	property string c8: _b8.valid && _b8.text == "1" ? "#ff0000" : "#ddd"
-	property string c9: _b9.valid && _b9.text == "1" ? "#ff0000" : "#ddd"
-	property string c10: _b10.valid && _b10.text == "1" ? "#ff0000" : "#ddd"
-	property string c11: _b11.valid && _b11.text == "1" ? "#ff0000" : "#ddd"
-	property string c12: _b12.valid && _b12.text == "1" ? "#ff0000" : "#ddd"
-	property string c13: _b13.valid && _b13.text == "1" ? "#ff0000" : "#ddd"
-	property string c14: _b14.valid && _b14.text == "1" ? "#ff0000" : "#ddd"
-	property string c15: _b15.valid && _b15.text == "1" ? "#ff0000" : "#ddd"
-	property string c16: _b16.valid && _b16.text == "1" ? "#ff0000" : "#ddd"
+	property VBusItem _bms0CellVolt: VBusItem { bind: service.path("/bsc/bms0/Voltages/Cell1") }
+	property VBusItem _bms1CellVolt: VBusItem { bind: service.path("/bsc/bms1/Voltages/Cell1") }
+	property VBusItem _bms2CellVolt: VBusItem { bind: service.path("/bsc/bms2/Voltages/Cell1") }
+	property VBusItem _bms3CellVolt: VBusItem { bind: service.path("/bsc/bms3/Voltages/Cell1") }
+	property VBusItem _bms4CellVolt: VBusItem { bind: service.path("/bsc/bms4/Voltages/Cell1") }
+	property VBusItem _bms5CellVolt: VBusItem { bind: service.path("/bsc/bms5/Voltages/Cell1") }
+	property VBusItem _bms6CellVolt: VBusItem { bind: service.path("/bsc/bms6/Voltages/Cell1") }
+	property VBusItem _bms7CellVolt: VBusItem { bind: service.path("/bsc/bms7/Voltages/Cell1") }
+	property VBusItem _bms8CellVolt: VBusItem { bind: service.path("/bsc/bms8/Voltages/Cell1") }
+	property VBusItem _bms9CellVolt: VBusItem { bind: service.path("/bsc/bms9/Voltages/Cell1") }
+	property VBusItem _bms10CellVolt: VBusItem { bind: service.path("/bsc/bms10/Voltages/Cell1") }
+	property VBusItem _bms11CellVolt: VBusItem { bind: service.path("/bsc/bms11/Voltages/Cell1") }
+	property VBusItem _bms12CellVolt: VBusItem { bind: service.path("/bsc/bms12/Voltages/Cell1") }
+	property VBusItem _bms13CellVolt: VBusItem { bind: service.path("/bsc/bms13/Voltages/Cell1") }
+	property VBusItem _bms14CellVolt: VBusItem { bind: service.path("/bsc/bms14/Voltages/Cell1") }
+	property VBusItem _bms15CellVolt: VBusItem { bind: service.path("/bsc/bms15/Voltages/Cell1") }
+	property VBusItem _bms16CellVolt: VBusItem { bind: service.path("/bsc/bms16/Voltages/Cell1") }
+	property VBusItem _bms17CellVolt: VBusItem { bind: service.path("/bsc/bms17/Voltages/Cell1") }
+	
 	property string bindPrefix
 	title: service.description
 
@@ -34,7 +37,7 @@ MbPage {
 		}
 		MbSubMenu {
 			description: qsTr("BMS Bluetooth 0")
-			show: bsc.valid
+			show: _bms0CellVolt.value>0.0 && _bms0CellVolt.value<65.0
 			subpage: Component {
 				PageBatteryBscBms {
 					bindPrefix: qsTr("/bsc/bms0")
@@ -43,7 +46,7 @@ MbPage {
 		}
 		MbSubMenu {
 			description: qsTr("BMS Bluetooth 1")
-			show: bsc.valid
+			show: _bms1CellVolt.value>0.0 && _bms1CellVolt.value<65.0
 			subpage: Component {
 				PageBatteryBscBms {
 					bindPrefix: qsTr("/bsc/bms1")
@@ -52,7 +55,7 @@ MbPage {
 		}
 		MbSubMenu {
 			description: qsTr("BMS Bluetooth 2")
-			show: bsc.valid
+			show: _bms2CellVolt.value>0.0 && _bms2CellVolt.value<65.0
 			subpage: Component {
 				PageBatteryBscBms {
 					bindPrefix: qsTr("/bsc/bms2")
@@ -61,7 +64,7 @@ MbPage {
 		}
 		MbSubMenu {
 			description: qsTr("BMS Bluetooth 3")
-			show: bsc.valid
+			show: _bms3CellVolt.value>0.0 && _bms3CellVolt.value<65.0
 			subpage: Component {
 				PageBatteryBscBms {
 					bindPrefix: qsTr("/bsc/bms3")
@@ -70,7 +73,7 @@ MbPage {
 		}
 		MbSubMenu {
 			description: qsTr("BMS Bluetooth 4")
-			show: bsc.valid
+			show: _bms4CellVolt.value>0.0 && _bms4CellVolt.value<65.0
 			subpage: Component {
 				PageBatteryBscBms {
 					bindPrefix: qsTr("/bsc/bms4")
@@ -79,7 +82,7 @@ MbPage {
 		}
 		MbSubMenu {
 			description: qsTr("BMS Bluetooth 5")
-			show: bsc.valid
+			show: _bms5CellVolt.value>0.0 && _bms5CellVolt.value<65.0
 			subpage: Component {
 				PageBatteryBscBms {
 					bindPrefix: qsTr("/bsc/bms5")
@@ -88,7 +91,7 @@ MbPage {
 		}
 		MbSubMenu {
 			description: qsTr("BMS Bluetooth 6")
-			show: bsc.valid
+			show: _bms6CellVolt.value>0.0 && _bms6CellVolt.value<65.0
 			subpage: Component {
 				PageBatteryBscBms {
 					bindPrefix: qsTr("/bsc/bms6")
@@ -99,7 +102,7 @@ MbPage {
 		
 		MbSubMenu {
 			description: qsTr("BMS serial 0")
-			show: bsc.valid
+			show: _bms7CellVolt.value>0.0 && _bms7CellVolt.value<65.0
 			subpage: Component {
 				PageBatteryBscBms {
 					bindPrefix: qsTr("/bsc/bms7")
@@ -108,7 +111,7 @@ MbPage {
 		}
 		MbSubMenu {
 			description: qsTr("BMS serial 1")
-			show: bsc.valid
+			show: _bms8CellVolt.value>0.0 && _bms8CellVolt.value<65.0
 			subpage: Component {
 				PageBatteryBscBms {
 					bindPrefix: qsTr("/bsc/bms8")
@@ -117,7 +120,7 @@ MbPage {
 		}
 		MbSubMenu {
 			description: qsTr("BMS serial 2")
-			show: bsc.valid
+			show: _bms9CellVolt.value>0.0 && _bms9CellVolt.value<65.0
 			subpage: Component {
 				PageBatteryBscBms {
 					bindPrefix: qsTr("/bsc/bms9")
@@ -127,7 +130,7 @@ MbPage {
 		
 		MbSubMenu {
 			description: qsTr("BMS serial 3")
-			show: bsc.valid
+			show: _bms10CellVolt.value>0.0 && _bms10CellVolt.value<65.0
 			subpage: Component {
 				PageBatteryBscBms {
 					bindPrefix: qsTr("/bsc/bms10")
@@ -136,7 +139,7 @@ MbPage {
 		}
 		MbSubMenu {
 			description: qsTr("BMS serial 4")
-			show: bsc.valid
+			show: _bms11CellVolt.value>0.0 && _bms11CellVolt.value<65.0
 			subpage: Component {
 				PageBatteryBscBms {
 					bindPrefix: qsTr("/bsc/bms11")
@@ -145,7 +148,7 @@ MbPage {
 		}
 		MbSubMenu {
 			description: qsTr("BMS serial 5")
-			show: bsc.valid
+			show: _bms12CellVolt.value>0.0 && _bms12CellVolt.value<65.0
 			subpage: Component {
 				PageBatteryBscBms {
 					bindPrefix: qsTr("/bsc/bms12")
@@ -154,7 +157,7 @@ MbPage {
 		}
 		MbSubMenu {
 			description: qsTr("BMS serial 6")
-			show: bsc.valid
+			show: _bms13CellVolt.value>0.0 && _bms13CellVolt.value<65.0
 			subpage: Component {
 				PageBatteryBscBms {
 					bindPrefix: qsTr("/bsc/bms13")
@@ -163,7 +166,7 @@ MbPage {
 		}
 		MbSubMenu {
 			description: qsTr("BMS serial 7")
-			show: bsc.valid
+			show: _bms14CellVolt.value>0.0 && _bms14CellVolt.value<65.0
 			subpage: Component {
 				PageBatteryBscBms {
 					bindPrefix: qsTr("/bsc/bms14")
@@ -172,7 +175,7 @@ MbPage {
 		}
 		MbSubMenu {
 			description: qsTr("BMS serial 8")
-			show: bsc.valid
+			show: _bms15CellVolt.value>0.0 && _bms15CellVolt.value<65.0
 			subpage: Component {
 				PageBatteryBscBms {
 					bindPrefix: qsTr("/bsc/bms15")
@@ -181,7 +184,7 @@ MbPage {
 		}
 		MbSubMenu {
 			description: qsTr("BMS serial 9")
-			show: bsc.valid
+			show: _bms16CellVolt.value>0.0 && _bms16CellVolt.value<65.0
 			subpage: Component {
 				PageBatteryBscBms {
 					bindPrefix: qsTr("/bsc/bms16")
@@ -190,7 +193,7 @@ MbPage {
 		}
 		MbSubMenu {
 			description: qsTr("BMS serial 10")
-			show: bsc.valid
+			show: _bms17CellVolt.value>0.0 && _bms17CellVolt.value<65.0
 			subpage: Component {
 				PageBatteryBscBms {
 					bindPrefix: qsTr("/bsc/bms17")
