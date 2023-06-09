@@ -33,41 +33,51 @@ balancingCurrent = [0 for x in range(20)]
 
   
 def parseData(message):
-    #logging.error(" New Message %i" % (message.arbitration_id))
     canId = message.arbitration_id
     
-    #Temperaturen
-    if canId>=0x380 and canId<0x38f:
-        tempSensNr=(canId-0x380)*4
-        for i in range(4):
-            bsc_temp[tempSensNr+i] = ((message.data[(i*2)+1]<<8) | message.data[i*2])/100.0
+    if len(message.data) == 0:
+        logging.info("id=%i, len=0", canId)
         return
         
-    #BMS data
-    for bmsNr in range(18):
-        candIdStart = 0x400+(0x32*bmsNr)
-        #candIdEnd = 0x400+0x32+(0x32*bmsNr)
+    try:
+        #canId = message.arbitration_id
         
-        #Cellvoltages
-        if canId>=candIdStart and canId<candIdStart+4:
-            cellNr=(canId-0x400-(0x32*bmsNr))*4
+        #Temperaturen
+        if canId>=0x380 and canId<0x38f:
+            tempSensNr=(canId-0x380)*4
             for i in range(4):
-                bsc_cellVoltage[bmsNr][cellNr+i] = ((message.data[(i*2)+1]<<8) | message.data[i*2])/1000.0
-                
-        #Ohter data
-        candIdStart=candIdStart+4
-        if canId>=candIdStart and canId<candIdStart+1:     
-            stateFETCharge[bmsNr] = message.data[0]
-            stateFETDischarge[bmsNr] = message.data[1]
-            stateBalancingActive[bmsNr] = message.data[2]
-                
-        #Ohter data
-        candIdStart=candIdStart+1
-        if canId>=candIdStart and canId<candIdStart+1:     
-            balancingCurrent[bmsNr] = ((message.data[1]<<8) | message.data[0])/100.0
-
-    return
+                bsc_temp[tempSensNr+i] = ((message.data[(i*2)+1]<<8) | message.data[i*2])/100.0
+            return
             
+        #BMS data
+        for bmsNr in range(18):
+            candIdStart = 0x400+(0x32*bmsNr)
+            #candIdEnd = 0x400+0x32+(0x32*bmsNr)
+            
+            #Cellvoltages
+            if canId>=candIdStart and canId<candIdStart+4:
+                cellNr=(canId-0x400-(0x32*bmsNr))*4
+                for i in range(4):
+                    bsc_cellVoltage[bmsNr][cellNr+i] = ((message.data[(i*2)+1]<<8) | message.data[i*2])/1000.0
+                    
+            #Ohter data
+            candIdStart=candIdStart+4
+            if canId>=candIdStart and canId<candIdStart+1:     
+                stateFETCharge[bmsNr] = message.data[0]
+                stateFETDischarge[bmsNr] = message.data[1]
+                stateBalancingActive[bmsNr] = message.data[2]
+                    
+            #Ohter data
+            candIdStart=candIdStart+1
+            if canId>=candIdStart and canId<candIdStart+1:     
+                balancingCurrent[bmsNr] = ((message.data[1]<<8) | message.data[0])/100.0
+
+        return
+          
+    except Exception as e:
+       logging.critical('Error at %s', 'parseData', exc_info=e)
+       logging.critical('canId %i, %i', canId, len(message.data))
+       return  
             
 def get_bus():
     return (
@@ -95,7 +105,7 @@ class DbusBscService(object):
 
         # Create the mandatory objects
         self._dbusservice.add_path('/DeviceInstance', deviceinstance)
-        self._dbusservice.add_path('/ProductId', 16)
+        self._dbusservice.add_path('/ProductId', 0)
         self._dbusservice.add_path('/ProductName', productname)
         self._dbusservice.add_path('/FirmwareVersion', 1)
         self._dbusservice.add_path('/HardwareVersion', 1)
@@ -124,13 +134,13 @@ class DbusBscService(object):
             cellpath = '/bsc/bms' + str(n) + '/BalancingCurrent'
             self._dbusservice.add_path(cellpath, None, writeable=True, gettextcallback=lambda p, v: "{:1.1f}A".format(v))
                 
-        GLib.timeout_add(1000, self._update)
+        GLib.timeout_add(10000, self._update)
 
 
     def _update(self):
         try:
             #BMS
-            for i in range(7+3+8):
+            for i in range(7+3+8):                    
                 for n in range(16):
                     temppath = '/bsc/bms' + str(i) + '/Voltages/Cell' + str(n+1)
                     self._dbusservice[temppath] = bsc_cellVoltage[i][n]
@@ -173,7 +183,7 @@ def getConfig():
     return config;
     
 def main():
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(filename='dbus-bsc-can.log', level=logging.INFO)
     
     config = getConfig()
     canDevice = config['DEFAULT']['canDevice']    
