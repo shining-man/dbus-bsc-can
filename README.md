@@ -10,6 +10,8 @@ The following data is displayed under 'BSC Details':
 - Balance state + current of the BMSs<br>
 
 ## Installation
+**The large image is required to install the driver!<br>**
+
 ```bash
 wget https://github.com/shining-man/dbus-bsc-can/archive/main.zip
 unzip main.zip
@@ -22,3 +24,6 @@ Edit the CAN device name
 nano /data/dbus-bsc-can/config.ini 
 ```
 
+## Note
+When using with a VenusOS v3.1, use this fork:
+https://github.com/oezyurt/dbus-bsc-can/tree/VenusOS3.1
